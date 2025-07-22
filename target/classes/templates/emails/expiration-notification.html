@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Estado de Revisiones Técnicas</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .header { background-color: #f8f9fa; padding: 20px; text-align: center; }
+        h1 { color: #dc3545; }
+        h2 { color: #6c757d; border-bottom: 1px solid #dee2e6; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        th { background-color: #f8f9fa; }
+        .expired { background-color: #fff3f3; }
+        .upcoming { background-color: #fff8e6; }
+        .days-overdue { color: #dc3545; font-weight: bold; }
+        .days-remaining { color: #ffc107; font-weight: bold; }
+        .footer { margin-top: 20px; font-size: 0.9em; color: #6c757d; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Reporte de Revisiones Técnicas</h1>
+    <p>Fecha de generación: <span th:text="${hoy}"></span></p>
+</div>
+
+<!-- Sección de revisiones vencidas -->
+<div th:if="${not #lists.isEmpty(vencidos)}">
+    <h2>Revisiones Vencidas</h2>
+    <table class="expired">
+        <thead>
+        <tr>
+            <th>Matrícula</th>
+            <th>Compañía</th>
+            <th>Fecha Vencimiento</th>
+            <th>Días de Atraso</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="v : ${vencidos}">
+            <td th:text="${v.matricula}"></td>
+            <td th:text="${v.nombreCompania}"></td>
+            <td th:text="${#temporals.format(v.revisionTecnicaExpiracion, 'dd/MM/yyyy')}"></td>
+            <td class="days-overdue"
+                th:if="${v.revisionTecnicaExpiracion != null and today != null}"
+                th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(v.revisionTecnicaExpiracion, today)}">
+            </td>
+            <td th:unless="${v.revisionTecnicaExpiracion != null and today != null}">N/A</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Sección de revisiones próximas a vencer -->
+<div th:if="${not #lists.isEmpty(porVencer)}">
+    <h2>Próximas a Vencer (30 días)</h2>
+    <table class="upcoming">
+        <thead>
+        <tr>
+            <th>Matrícula</th>
+            <th>Compañía</th>
+            <th>Fecha Vencimiento</th>
+            <th>Días Restantes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="v : ${porVencer}">
+            <td th:text="${v.matricula}"></td>
+            <td th:text="${v.nombreCompania}"></td>
+            <td th:text="${#temporals.format(v.revisionTecnicaExpiracion, 'dd/MM/yyyy')}"></td>
+            <td class="days-remaining"
+                th:if="${v.revisionTecnicaExpiracion != null and today != null}"
+                th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(today, v.revisionTecnicaExpiracion)}">
+            </td>
+            <td th:unless="${v.revisionTecnicaExpiracion != null and today != null}">N/A</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Mensaje si no hay registros -->
+<div th:if="${#lists.isEmpty(vencidos) and #lists.isEmpty(porVencer)}">
+    <p>No hay revisiones vencidas ni próximas a vencer.</p>
+</div>
+
+<div class="footer">
+    <p>Este es un mensaje automático. Por favor no responder.</p>
+    <p>© 2025 Sistema de Gestión de Flota - Radalco</p>
+</div>
+</body>
+</html>

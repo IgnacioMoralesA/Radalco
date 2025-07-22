@@ -1,0 +1,19 @@
+# Ignorar la carpeta de compilación
+target/
+
+# Ignorar configuración de IDEs
+.idea/
+.vscode/
+*.iml
+
+# Ignorar archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de Git
+.git
+.gitignore
+
+# Otros posibles archivos temporales
+*.log
+*.tmp
