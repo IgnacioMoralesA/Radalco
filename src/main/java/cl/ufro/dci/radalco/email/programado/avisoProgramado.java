@@ -4,54 +4,44 @@ package cl.ufro.dci.radalco.email.programado;
 import cl.ufro.dci.radalco.email.service.emailService;
 import cl.ufro.dci.radalco.vehiculo.model.Vehiculo;
 import cl.ufro.dci.radalco.vehiculo.repository.VehiculoRepository;
-import cl.ufro.dci.radalco.vehiculo.service.VehiculoService;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Component
 public class avisoProgramado {
 
-    private final VehiculoRepository vehiculoRepository;
-    private final emailService emailService;
-    private final VehiculoService vehiculoService;
+    @Autowired
+    private emailService emailService;
 
-    public avisoProgramado(VehiculoRepository vehiculoRepository, emailService emailService, VehiculoService vehiculoService) {
-        this.vehiculoRepository = vehiculoRepository;
-        this.emailService = emailService;
-        this.vehiculoService = vehiculoService;
-    }
+    @Autowired
+    private VehiculoRepository vehiculoRepository;
 
-    @Scheduled(cron = "0 0 9 * * ?") // Ejecutar todos los días a las 9 AM
-    public void checkExpiringReviews() throws MessagingException {
-        LocalDate hoy  = LocalDate.now();
-        int daysBefore = 30; // Notificar 30 días antes
+    @Scheduled(cron = "0 0 9 * * ?") // Ejecuta diario a las 9 AM
+    public void enviarAvisosVencimiento() throws MessagingException {
+        LocalDate hoy = LocalDate.now();
+        LocalDate fechaLimite = hoy.plusDays(30); // Avisar con 30 días de anticipación
 
-        // 1. Obtener revisiones vencidas (fecha < hoy)
-        List<Vehiculo> vencidos = vehiculoRepository.findByRevisionTecnicaExpiracionBefore(hoy);
+        List<Vehiculo> vehiculosPorVencer = vehiculoRepository
+                .findByRevisionTecnicaExpiracionBetween(hoy, fechaLimite);
 
-        // 2. Obtener revisiones por vencer (hoy <= fecha <= hoy+30 días)
-        List<Vehiculo> porVencer = vehiculoRepository.findByRevisionTecnicaExpiracionBetween(
-                hoy,
-                hoy.plusDays(30)
-        );
+        for (Vehiculo vehiculo : vehiculosPorVencer) {
+            long diasRestantes = ChronoUnit.DAYS.between(hoy, vehiculo.getRevisionTecnicaExpiracion());
 
-        // 3. Combinar listas (eliminando duplicados)
-        List<Vehiculo> todos = Stream.concat(vencidos.stream(), porVencer.stream())
-                .distinct()
-                .collect(Collectors.toList());
-
-        if (!todos.isEmpty()) {
-            emailService.sendExpirationNotifications(todos, 30);
-        } else {
-            log.info("No hay revisiones vencidas ni por vencer");
+            // Suponiendo que cada vehículo tiene un email asociado
+            emailService.enviarAvisoVencimiento(
+                    vehiculo.getMatricula(),
+                    "i.morales.04@ufromail.cl",
+                    vehiculo.getRevisionTecnicaExpiracion(),
+                    diasRestantes
+                );
         }
     }
 }

@@ -8,14 +8,9 @@
 <body>
 <div class="container mt-5">
     <h2>Editar Fechas: <span th:text="${vehiculo.matricula}"></span></h2>
-    <form th:action="@{/vehiculos/actualizar}" method="post">
-        <input type="hidden" name="matricula" th:value="${vehiculo.matricula}">
-        <div class="mb-3">
-            <label>Revisión Técnica</label>
-            <input type="date" class="form-control"
-                   name="revisionTecnicaExpiracion"
-                   th:value="${#dates.format(vehiculo.revisionTecnicaExpiracion, 'yyyy-MM-dd')}">
-        </div>
+    <form th:action="@{/vehiculos/editar/{matricula}(matricula=${vehiculo.matricula})}"
+          th:object="${revisionDTO}" method="post">
+        <input type="date" th:field="*{revisionTecnicaExpiracion}" class="form-control">
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
 </div>

@@ -8,28 +8,18 @@
 <body>
 <div class="container mt-5">
     <h1>Vehículos</h1>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Matrícula</th>
-            <th>Revisión Técnica</th>
-            <th>Permiso Circulación</th>
-            <th>Seguro Obligatorio</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="v : ${vehiculos}">
+    <table>
+        <!-- Vehículos vencidos -->
+        <tr th:each="v : ${vehiculosVencidos}" class="table-danger">
             <td th:text="${v.matricula}"></td>
-            <td th:text="${#dates.format(v.revisionTecnicaExpiracion, 'dd/MM/yyyy')}"></td>
-            <td th:text="${#dates.format(v.permisoCirculacionExpiracion, 'dd/MM/yyyy')}"></td>
-            <td th:text="${#dates.format(v.seguroObligatorioExpiracion, 'dd/MM/yyyy')}"></td>
-            <td>
-                <a th:href="@{/vehiculos/editar/{matricula}(matricula=${v.matricula})}"
-                   class="btn btn-primary btn-sm">Editar</a>
-            </td>
+            <td th:text="${#temporals.format(v.revisionTecnicaExpiracion, 'dd/MM/yyyy')}"></td>
         </tr>
-        </tbody>
+
+        <!-- Vehículos próximos a vencer -->
+        <tr th:each="v : ${vehiculosProximos}" class="table-warning">
+            <td th:text="${v.matricula}"></td>
+            <td th:text="${#temporals.format(v.revisionTecnicaExpiracion, 'dd/MM/yyyy')}"></td>
+        </tr>
     </table>
 </div>
 </body>
