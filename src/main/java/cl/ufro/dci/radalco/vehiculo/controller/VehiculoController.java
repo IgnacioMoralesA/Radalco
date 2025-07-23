@@ -89,7 +89,7 @@ public class VehiculoController {
     /**
      * Muestra la lista de vehículos (HTML)
      */
-    @GetMapping
+    @GetMapping("/")
     public String listarVehiculos(Model model) {
         model.addAttribute("vehiculos", vehiculoService.obtenerTodos());
         model.addAttribute("vehiculosProximos",

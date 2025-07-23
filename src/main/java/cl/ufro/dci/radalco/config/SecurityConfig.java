@@ -6,8 +6,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -15,14 +13,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable()) // Deshabilita CSRF para APIs (especialmente si no usas login)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/vehiculos/**").permitAll() // Permite POST sin autenticación
-                        .requestMatchers("/vehiculos/**").permitAll()
-                        //.anyRequest().authenticated()
+                        .requestMatchers("/", "/api/vehiculos/**", "/vehiculos/**").permitAll() // 🔓 permite estas rutas
+                        .anyRequest().permitAll() // 🔓 permite todo en desarrollo
                 )
-                .csrf(csrf -> csrf.disable()) // Deshabilita CSRF para APIs
-                .formLogin(withDefaults())
-                .httpBasic(withDefaults());
+                .httpBasic(httpBasic -> {}); // opcional: habilita autenticación básica si la necesitas
 
         return http.build();
     }
