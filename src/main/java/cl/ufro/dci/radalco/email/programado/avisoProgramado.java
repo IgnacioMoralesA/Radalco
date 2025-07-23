@@ -30,7 +30,9 @@ public class avisoProgramado {
         this.vehiculoService = vehiculoService;
     }
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 9 * * MON")
+    // Este cron ejecuta el metodo todos los lunes a las 9:00 AM
+    // Puedes ajustar la expresión cron según tus necesidades
     @Transactional(propagation = Propagation.REQUIRED) // Añade esta anotación
     public void enviarAvisosVencimiento() {
         try {
