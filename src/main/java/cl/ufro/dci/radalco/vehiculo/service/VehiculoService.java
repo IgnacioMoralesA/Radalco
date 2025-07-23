@@ -4,6 +4,7 @@ import cl.ufro.dci.radalco.vehiculo.model.Vehiculo;
 import cl.ufro.dci.radalco.vehiculo.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,11 +16,12 @@ public class VehiculoService {
     @Autowired
     private VehiculoRepository repo;
 
-    public boolean actualizarRevisionTecnica(String matricula, LocalDate fechaRevisionActual) {
+    @Transactional
+    public boolean actualizarRevisionTecnica(String matricula, LocalDate fechaActualizacion) {
         Optional<Vehiculo> vehiculoOpt = repo.findById(matricula);
         if(vehiculoOpt.isPresent()){
             Vehiculo vehiculo = vehiculoOpt.get();
-            LocalDate nuevaRevision = fechaRevisionActual.plusDays(vehiculo.getFrecuenciaRevisionTecnica());
+            LocalDate nuevaRevision = fechaActualizacion.plusMonths(vehiculo.getFrecuenciaRevisionTecnica());
             vehiculo.setRevisionTecnicaExpiracion(nuevaRevision);
             repo.save(vehiculo);
             return true;
@@ -31,14 +33,17 @@ public class VehiculoService {
         return repo.findById(matricula);
     }
 
+    @Transactional(readOnly = true)
     public List<Vehiculo> obtenerTodos() {
         return repo.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Vehiculo> obtenerProximosAVencer(LocalDate inicio, LocalDate fin) {
         return repo.findByRevisionTecnicaExpiracionBetween(inicio, fin);
     }
 
+    @Transactional(readOnly = true)
     public List<Vehiculo> obtenerVencidos(LocalDate fechaReferencia) {
         return repo.findByRevisionTecnicaExpiracionBefore(fechaReferencia);
     }

@@ -2,21 +2,44 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Confirmación recibida</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>Confirmación de Revisión Técnica</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 5px; }
+        .content { padding: 20px; background-color: #f9f9f9; margin-top: 20px; border: 1px solid #ddd; }
+        .info-item { margin-bottom: 10px; }
+        .info-label { font-weight: bold; }
+        .footer { margin-top: 20px; font-size: 12px; color: #777; text-align: center; }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <div class="alert alert-success text-center">
-        <h4 class="alert-heading">¡Confirmación recibida!</h4>
-        <p>La revisión técnica del vehículo con matrícula <strong th:text="${matricula}"></strong> ha sido registrada exitosamente.</p>
-        <hr>
-        <p>Nueva fecha de vencimiento:
-            <strong th:text="${#temporals.format(vehiculo.revisionTecnicaExpiracion, 'dd/MM/yyyy')}"></strong>
-        </p>
-        <a href="/vehiculos/" class="btn btn-success mt-3">Ir a la lista</a>
+<div class="header">
+    <h1>Revisión Técnica Actualizada</h1>
+</div>
+
+<div class="content">
+    <p>Se ha actualizado correctamente la revisión técnica del vehículo:</p>
+
+    <div class="info-item">
+        <span class="info-label">Patente:</span>
+        <span th:text="${vehiculo.matricula}"></span>
     </div>
+
+    <div class="info-item">
+        <span class="info-label">Fecha de actualización:</span>
+        <span th:text="${fechaActual}"></span>
+    </div>
+
+    <div class="info-item">
+        <span class="info-label">Nueva fecha de vencimiento:</span>
+        <span th:text="${nuevaFecha}"></span>
+    </div>
+
+    <p style="margin-top: 20px;">Esta actualización fue realizada automáticamente al ingresar al enlace proporcionado en el correo electrónico.</p>
+</div>
+
+<div class="footer">
+    <p>Este es un mensaje automático generado por el sistema de Radalco.</p>
 </div>
 </body>
 </html>

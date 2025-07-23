@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,19 +111,25 @@ public class VehiculoController {
 
         Optional<Vehiculo> vehiculoOpt = vehiculoService.obtenerPorMatricula(matricula);
 
-        if (vehiculoOpt.isPresent()) {
-            Vehiculo vehiculo = vehiculoOpt.get();
-            boolean actualizado = vehiculoService.actualizarRevisionTecnica(matricula, LocalDate.now());
-
-            if (actualizado) {
-                model.addAttribute("matricula", matricula);
-                model.addAttribute("vehiculo", vehiculo); // importante para mostrar la fecha
-                return "confirmacion-revision";
-            }
+        if (vehiculoOpt.isEmpty()) {
+            model.addAttribute("error", "No se encontró el vehículo con matrícula: " + matricula);
+            return "error-confirmacion";
         }
 
-        model.addAttribute("error", "No se pudo actualizar la revisión técnica. Verifique que la matrícula sea válida.");
-        return "error-confirmacion";
+        boolean actualizado = vehiculoService.actualizarRevisionTecnica(matricula, LocalDate.now());
+
+        if (!actualizado) {
+            model.addAttribute("error", "No se pudo actualizar la revisión técnica");
+            return "error-confirmacion";
+        }
+
+        Vehiculo vehiculo = vehiculoService.obtenerPorMatricula(matricula).orElseThrow();
+
+        model.addAttribute("vehiculo", vehiculo);
+        model.addAttribute("fechaActual", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        model.addAttribute("nuevaFecha", vehiculo.getRevisionTecnicaExpiracion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+
+        return "confirmacion-revision";
     }
 
 

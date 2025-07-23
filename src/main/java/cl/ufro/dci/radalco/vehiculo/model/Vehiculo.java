@@ -22,6 +22,9 @@ public class Vehiculo {
     private int anioVehiculo;
     private int frecuenciaRevisionTecnica;
 
+    @Transient // Este campo no se persiste en la base de datos
+    private String enlaceActualizacion;
+
     public Vehiculo(String matricula, String empresa, String rutEmpresa, LocalDate revisionTecnicaExpiracion, LocalDate permisoCirculacionExpiracion, LocalDate seguroObligatorioExpiracion, int anioVehiculo) {
         this.matricula = matricula;
         this.nombreCompania = empresa;

@@ -3,6 +3,7 @@ cl\ufro\dci\radalco\RadalcoApplication.class
 cl\ufro\dci\radalco\vehiculo\DTO\RevisionDTO.class
 cl\ufro\dci\radalco\config\SecurityConfig.class
 cl\ufro\dci\radalco\vehiculo\model\Vehiculo.class
+cl\ufro\dci\radalco\vehiculo\controller\VehiculoController$VehiculoApiController.class
 cl\ufro\dci\radalco\email\service\emailService.class
 cl\ufro\dci\radalco\email\programado\avisoProgramado.class
 cl\ufro\dci\radalco\vehiculo\repository\VehiculoRepository.class

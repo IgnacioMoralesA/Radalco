@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Aviso de Vencimiento</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .header { background-color: #2c3e50; color: white; padding: 15px; }
+        .content { padding: 20px; }
+        .section { margin-bottom: 20px; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { border: 1px solid #ddd; padding: 8px; }
+        .urgent { background-color: #ffebee; }
+        .warning { background-color: #fff8e1; }
+        .btn {
+            display: inline-block; padding: 8px 15px;
+            background-color: #3498db; color: white;
+            text-decoration: none; border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Aviso de Revisión Técnica</h1>
+</div>
+
+<div class="content">
+    <p>Estimado cliente,</p>
+
+    <!-- Sección para vehículos vencidos -->
+    <div th:if="${not #lists.isEmpty(vehiculosVencidos)}" class="section">
+        <h2>Vehículos con revisión técnica vencida</h2>
+        <table class="table urgent">
+            <thead>
+            <tr>
+                <th>Patente</th>
+                <th>Fecha de Vencimiento</th>
+                <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="vehiculo : ${vehiculosVencidos}">
+                <td th:text="${vehiculo.matricula}"></td>
+                <td th:text="${#temporals.format(vehiculo.revisionTecnicaExpiracion, 'dd/MM/yyyy')}"></td>
+                <td>
+                    <a th:href="${baseUrl + '/vehiculos/confirmar-revision?matricula=' + vehiculo.matricula}"
+                       class="btn">Actualizar Revisión</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Sección para vehículos por vencer -->
+    <div th:if="${not #lists.isEmpty(vehiculosPorVencer)}" class="section">
+        <h2>Vehículos con revisión técnica por vencer</h2>
+        <table class="table warning">
+            <thead>
+            <tr>
+                <th>Patente</th>
+                <th>Fecha de Vencimiento</th>
+                <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="vehiculo : ${vehiculosPorVencer}">
+                <td th:text="${vehiculo.matricula}"></td>
+                <td th:text="${#temporals.format(vehiculo.revisionTecnicaExpiracion, 'dd/MM/yyyy')}"></td>
+                <td>
+                    <a th:href="${baseUrl + '/vehiculos/confirmar-revision?matricula=' + vehiculo.matricula}"
+                       class="btn">Actualizar Revisión</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Este es un mensaje automático, por favor no responda a este correo.</p>
+</div>
+</body>
+</html>
