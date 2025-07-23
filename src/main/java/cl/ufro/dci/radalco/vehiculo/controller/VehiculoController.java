@@ -2,6 +2,7 @@ package cl.ufro.dci.radalco.vehiculo.controller;
 
 import cl.ufro.dci.radalco.vehiculo.DTO.RevisionDTO;
 import cl.ufro.dci.radalco.vehiculo.model.Vehiculo;
+import cl.ufro.dci.radalco.vehiculo.repository.VehiculoRepository;
 import cl.ufro.dci.radalco.vehiculo.service.VehiculoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,12 @@ import java.util.Optional;
 public class VehiculoController {
 
     private final VehiculoService vehiculoService;
+    private final VehiculoRepository repo;
 
     @Autowired
-    public VehiculoController(VehiculoService vehiculoService) {
+    public VehiculoController(VehiculoService vehiculoService, VehiculoRepository repo) {
         this.vehiculoService = vehiculoService;
+        this.repo = repo;
     }
 
     // ======================
@@ -34,10 +37,12 @@ public class VehiculoController {
     public static class VehiculoApiController {
 
         private final VehiculoService vehiculoService;
+        private final VehiculoRepository repo;
 
         @Autowired
-        public VehiculoApiController(VehiculoService vehiculoService) {
+        public VehiculoApiController(VehiculoService vehiculoService,  VehiculoRepository repo) {
             this.vehiculoService = vehiculoService;
+            this.repo = repo;
         }
 
         /**
@@ -116,7 +121,7 @@ public class VehiculoController {
             return "error-confirmacion";
         }
 
-        boolean actualizado = vehiculoService.actualizarRevisionTecnica(matricula, LocalDate.now());
+        boolean actualizado = vehiculoService.actualizarRevisionTecnica(matricula, repo.findByMatricula(matricula).getRevisionTecnicaExpiracion());
 
         if (!actualizado) {
             model.addAttribute("error", "No se pudo actualizar la revisión técnica");

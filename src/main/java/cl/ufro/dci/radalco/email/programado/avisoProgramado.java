@@ -43,7 +43,7 @@ public class avisoProgramado {
 
             if (!vehiculosVencidos.isEmpty() || !vehiculosPorVencer.isEmpty()) {
                 // Enviar un solo correo con ambas listas
-                String emailDestinatario = "i.morales04@ufromail.cl"; // Reemplaza con el email destino
+                String emailDestinatario = "Constructoraradalco@gmail.com"; // Reemplaza con el email destino
                 emailService.enviarAvisoVencimiento(emailDestinatario, vehiculosVencidos, vehiculosPorVencer);
             }
         } catch (Exception e) {
