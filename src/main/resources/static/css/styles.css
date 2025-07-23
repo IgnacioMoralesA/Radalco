@@ -1,0 +1,55 @@
+/* styles.css */
+
+/* Activar modo oscuro automático basado en sistema */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+
+    .container {
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        padding: 2rem;
+    }
+
+    .table {
+        color: #e0e0e0;
+    }
+
+    .table-danger {
+        background-color: #721c24 !important;
+        color: #fff;
+    }
+
+    .table-warning {
+        background-color: #856404 !important;
+        color: #fff;
+    }
+
+    .alert-success {
+        background-color: #2e7d32;
+        color: white;
+    }
+
+    .alert-danger {
+        background-color: #c62828;
+        color: white;
+    }
+
+    .btn-primary {
+        background-color: #1976d2;
+    }
+
+    .btn-secondary {
+        background-color: #424242;
+        color: white;
+    }
+}
+
+/* Modo claro */
+@media (prefers-color-scheme: light) {
+    .container {
+        background-color: white;
+    }
+}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmación recibida</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="alert alert-success text-center">
+        <h4 class="alert-heading">¡Confirmación recibida!</h4>
+        <p>La revisión técnica del vehículo con matrícula <strong th:text="${matricula}"></strong> ha sido registrada exitosamente.</p>
+        <hr>
+        <p>Nueva fecha de vencimiento:
+            <strong th:text="${#temporals.format(vehiculo.revisionTecnicaExpiracion, 'dd/MM/yyyy')}"></strong>
+        </p>
+        <a href="/vehiculos/" class="btn btn-success mt-3">Ir a la lista</a>
+    </div>
+</div>
+</body>
+</html>
