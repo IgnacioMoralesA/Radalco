@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/vehiculos")
@@ -107,15 +108,23 @@ public class VehiculoController {
             @RequestParam String matricula,
             Model model) {
 
-        boolean actualizado = vehiculoService.actualizarRevisionTecnica(matricula, LocalDate.now());
-        if (actualizado) {
-            model.addAttribute("matricula", matricula);
-            return "confirmacion-revision";
-        } else {
-            model.addAttribute("error", "No se pudo actualizar la revisión técnica");
-            return "error-confirmacion";
+        Optional<Vehiculo> vehiculoOpt = vehiculoService.obtenerPorMatricula(matricula);
+
+        if (vehiculoOpt.isPresent()) {
+            Vehiculo vehiculo = vehiculoOpt.get();
+            boolean actualizado = vehiculoService.actualizarRevisionTecnica(matricula, LocalDate.now());
+
+            if (actualizado) {
+                model.addAttribute("matricula", matricula);
+                model.addAttribute("vehiculo", vehiculo); // importante para mostrar la fecha
+                return "confirmacion-revision";
+            }
         }
+
+        model.addAttribute("error", "No se pudo actualizar la revisión técnica. Verifique que la matrícula sea válida.");
+        return "error-confirmacion";
     }
+
 
     /**
      * Muestra formulario de edición
